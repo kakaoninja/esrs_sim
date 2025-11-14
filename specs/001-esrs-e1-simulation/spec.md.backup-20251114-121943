@@ -1,0 +1,250 @@
+# Feature Specification: ESRS E1 Climate Statistical Prognosis Simulation
+
+**Feature Branch**: `001-esrs-e1-simulation`
+**Created**: 2025-11-14
+**Status**: Draft
+**Input**: User description: "CuPy simulation for ESRS E1 statistical prognosis, including the most significant influence factors aswell as real company data. use a sqlite db for the data, dont fill it yourself, but provide accurate descriptions for it. there will be correlations between those parameters which are assumptious at best. developing a concept for those correlations will be key, first an MVP for the simulation must be created."
+
+## Clarifications
+
+### Session 2025-11-14
+
+- Q: How should simulation results be presented to users? → A: CSV output only
+- Q: When historical emissions data has gaps (missing months or periods), how should the simulation handle this? → A: Use interpolation (statistical imputation to fill gaps)
+- Q: When the simulation detects unrealistic projections (negative emissions, exponential growth), what should happen? → A: Complete simulation but include traceable suspicious values
+- Q: How should data access be controlled for sensitive corporate emissions data? → A: Single-user local execution (no authentication, file system permissions only)
+- Q: What minimum data completeness is required within the 12 months of historical data? → A: Any data accepted (no minimum threshold, warn if sparse)
+
+## User Scenarios & Testing *(mandatory)*
+
+### User Story 1 - Basic Climate Prognosis Simulation (Priority: P1)
+
+A sustainability analyst needs to generate forward-looking climate metrics for ESRS E1 disclosure requirements. They have historical company emissions data and need statistical projections for future reporting periods to support financial planning and compliance.
+
+**Why this priority**: This is the core MVP functionality. Without basic simulation capability, the system provides no value. ESRS E1 requires forward-looking information, making prognosis generation the foundation of the feature.
+
+**Independent Test**: Can be fully tested by loading historical emissions data and running a simulation that produces projected values for future periods with confidence intervals.
+
+**Acceptance Scenarios**:
+
+1. **Given** historical company emissions data for the past 3 years, **When** the analyst runs a basic simulation for the next 2 years, **Then** the system generates projected emission values with statistical confidence intervals in CSV format
+2. **Given** valid company data in the database, **When** the simulation executes, **Then** results include key ESRS E1 metrics (Scope 1, 2, 3 emissions, carbon intensity) projected forward and output as CSV
+3. **Given** simulation parameters are set, **When** the simulation completes, **Then** the CSV output includes the methodology and assumptions used for audit trail purposes
+
+---
+
+### User Story 2 - Multi-Factor Influence Analysis (Priority: P2)
+
+A climate analyst wants to understand how different influence factors (energy prices, production volumes, regulatory changes, technology adoption) affect future emissions projections. They need to see which factors have the most significant impact on prognosis outcomes.
+
+**Why this priority**: After basic simulation works, understanding influence factors provides actionable insights. This enables scenario planning and helps identify which operational changes would most impact climate outcomes.
+
+**Independent Test**: Can be tested by configuring multiple influence factors, running the simulation, and receiving a sensitivity analysis showing the relative impact of each factor on projected emissions.
+
+**Acceptance Scenarios**:
+
+1. **Given** multiple influence factors are defined in the system, **When** the simulation runs, **Then** the output includes sensitivity analysis showing how each factor affects the prognosis
+2. **Given** historical correlations between influence factors and emissions, **When** generating projections, **Then** the system applies these correlations to adjust future estimates
+3. **Given** simulation results, **When** the analyst reviews output, **Then** factors are ranked by their significance to the prognosis outcome
+
+---
+
+### User Story 3 - Correlation Model Configuration (Priority: P3)
+
+A data scientist needs to configure and refine the correlation model between influence factors and climate metrics. They want to test different correlation assumptions, compare model performance, and select the most appropriate approach for their company's specific situation.
+
+**Why this priority**: This enables customization and improvement of the simulation model. While important for accuracy, the system can function with default correlation models, making this lower priority than core simulation capability.
+
+**Independent Test**: Can be tested by defining custom correlation parameters, running simulations with different correlation models, and comparing the statistical fit and prediction accuracy of each approach.
+
+**Acceptance Scenarios**:
+
+1. **Given** multiple correlation model approaches, **When** the data scientist configures a specific model, **Then** subsequent simulations use the selected correlation methodology
+2. **Given** historical data and a proposed correlation model, **When** the system validates the model, **Then** it provides fit statistics (R-squared, error metrics) to assess model quality
+3. **Given** different correlation configurations, **When** running comparison simulations, **Then** the system shows which model better predicts historical outcomes (backtesting validation)
+
+---
+
+### Edge Cases
+
+- **Incomplete historical data**: When data has gaps (missing months, partial year data), the system uses statistical interpolation to fill missing values and documents which periods were imputed. Any level of data completeness is accepted, with warnings issued when data is sparse
+- How does the system handle extreme outliers in historical emissions data (mergers, facility closures, unusual events)?
+- What happens when influence factor data is unavailable for projection periods?
+- **Unrealistic projections**: When correlation assumptions produce unrealistic projections (negative emissions, exponential growth), the simulation completes and outputs all values with suspicious values clearly flagged and traceable (including reason and threshold violated)
+- What happens when database schema does not match expected structure or required fields are missing?
+- How does the system handle zero or near-zero historical emissions (new companies, low-emission operations)?
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+- **FR-001**: System MUST generate statistical projections of ESRS E1 climate metrics for user-specified future time periods
+- **FR-002**: System MUST calculate projections based on historical company emissions data with configurable time horizons (1-5 years forward)
+- **FR-003**: System MUST incorporate influence factors (energy prices, production volumes, regulatory impacts, technology changes) into prognosis calculations
+- **FR-004**: System MUST apply correlation models between influence factors and emissions metrics to adjust projections
+- **FR-005**: System MUST produce confidence intervals or uncertainty ranges for all projected values
+- **FR-006**: System MUST provide detailed database schema definitions for all required data entities (company data, emissions history, influence factors, correlation parameters)
+- **FR-007**: System MUST validate input data against expected schemas, provide actionable error messages for data quality issues, and issue warnings when historical data is sparse (without blocking simulation execution)
+- **FR-008**: System MUST document the correlation methodology and assumptions used for each simulation run
+- **FR-009**: System MUST support multiple correlation model approaches and allow selection between them
+- **FR-010**: System MUST generate audit trail outputs documenting methodology, input data sources, calculation parameters used, and any data imputation performed (which periods, method used)
+- **FR-011**: System MUST handle missing or incomplete historical data using statistical interpolation methods to fill gaps, with all imputed values clearly documented in audit trail outputs
+- **FR-012**: System MUST detect unrealistic projection outcomes (negative values, extreme outliers), complete the simulation, and flag suspicious values in the output with traceability information (reason for flag, threshold violated)
+- **FR-013**: System MUST output all prognosis results in CSV file format with clearly labeled columns for projection periods, emission values by scope, confidence intervals, metadata, and a flag column indicating suspicious values with traceability details
+- **FR-014**: System MUST operate as single-user local execution, relying on file system permissions for data access control without requiring application-level authentication or authorization
+
+### Key Entities
+
+- **Company Profile**: Represents the organization being analyzed; includes company identifier, industry classification, baseline year, reporting boundaries (organizational and operational scope)
+
+- **Historical Emissions Record**: Time-series data of actual emissions; includes reporting period, Scope 1/2/3 GHG emissions (in tCO2e), activity data (production volume, energy consumption), data quality indicators, methodology version
+
+- **Influence Factor**: External or internal variable that affects emissions; includes factor identifier, factor type (economic, regulatory, operational, technological), measurement unit, historical values, projected values (if known)
+
+- **Correlation Model**: Mathematical relationship between influence factors and emissions; includes model identifier, model type (linear, polynomial, machine learning), factor-to-metric mappings, correlation coefficients, fit statistics, validation metrics
+
+- **Simulation Configuration**: Parameters for a specific prognosis run; includes simulation identifier, target projection period, selected correlation model, confidence level, scenario assumptions
+
+- **Prognosis Result**: Output of simulation; includes projection period, projected emission values by scope, confidence intervals, influence factor contributions, methodology reference, generation timestamp
+
+## Success Criteria *(mandatory)*
+
+### Measurable Outcomes
+
+- **SC-001**: Analysts can generate a complete ESRS E1 climate prognosis for a 2-year forward period in under 30 seconds for typical SME dataset (3 years of monthly historical data)
+- **SC-002**: Simulation produces projections with documented statistical confidence levels (e.g., 95% confidence intervals) for all key metrics
+- **SC-003**: The system correctly processes and validates company data against provided database schemas with 100% error detection for schema violations
+- **SC-004**: Influence factor sensitivity analysis identifies and ranks the top 3 most significant factors affecting projections
+- **SC-005**: Correlation model validation provides fit statistics that allow comparison between different modeling approaches
+- **SC-006**: Generated prognosis outputs include complete audit trail documentation sufficient for ESRS assurance review
+- **SC-007**: The MVP simulation runs successfully with at least one default correlation model without requiring custom configuration
+
+## Assumptions & Dependencies *(optional)*
+
+### Assumptions
+
+- Companies have at least 12 months of historical emissions data available for meaningful statistical analysis (any level of data completeness is accepted, with warnings issued for sparse data)
+- Influence factors are quantifiable and have historical data that correlates temporally with emissions records
+- Default correlation models based on industry-standard approaches (linear regression, time-series methods) provide reasonable accuracy for initial MVP
+- Database schema will be populated by users or external data pipelines; simulation reads existing data rather than creating test datasets
+- ESRS E1 metrics follow GHG Protocol categorization (Scope 1, 2, 3) and are measured in tCO2e
+- Projection horizons of 1-5 years are the primary use case for corporate climate planning
+- System runs in single-user local environment; data access security is managed through operating system file permissions
+
+### Dependencies
+
+- Availability of historical company emissions data in structured format
+- Database infrastructure for data persistence (schema definitions provided, data not pre-populated)
+- Statistical libraries capable of time-series analysis and regression modeling
+- Understanding of ESRS E1 technical requirements and GHG Protocol standards
+- Domain expertise to define initial correlation model approaches
+
+## Scope Boundaries *(optional)*
+
+### In Scope
+
+- Statistical prognosis generation for ESRS E1 climate metrics
+- Multi-factor influence analysis with correlation modeling
+- Database schema definitions for all required entities
+- Validation and error handling for input data quality
+- Audit trail and methodology documentation
+- Configurable correlation models with comparison capability
+- Confidence intervals and uncertainty quantification
+- MVP with at least one functional correlation approach
+
+### Out of Scope
+
+- Automated data collection from external sources (ERP systems, utility providers)
+- Pre-populated sample datasets or test data generation
+- Financial quantification or carbon pricing (separate feature requirement)
+- Scenario planning UI or interactive dashboards
+- Integration with specific ESRS reporting platforms
+- Machine learning model training (initial MVP uses statistical methods)
+- Real-time data processing or streaming analytics
+- Multi-company comparison or benchmarking analysis
+- Regulatory interpretation or compliance advisory
+- Multi-user authentication and authorization systems
+- Role-based access control or user management features
+- Network-based or client-server deployment architectures
+
+## Data Schema Requirements *(optional)*
+
+The following database schema definitions MUST be provided (data not pre-populated):
+
+### Company Profile Schema
+- Company identifier (primary key)
+- Company name
+- Industry classification code (NACE/ISIC)
+- Baseline reference year
+- Organizational boundary description
+- Operational boundary description
+
+### Historical Emissions Schema
+- Record identifier (primary key)
+- Company identifier (foreign key)
+- Reporting period start date
+- Reporting period end date
+- Scope 1 emissions (tCO2e)
+- Scope 2 emissions - location-based (tCO2e)
+- Scope 2 emissions - market-based (tCO2e)
+- Scope 3 emissions (tCO2e) - by category if available
+- Activity data (production volume, energy consumption)
+- Data quality indicator (measured/estimated/calculated)
+- Methodology version reference
+
+### Influence Factor Schema
+- Factor identifier (primary key)
+- Factor name
+- Factor type (economic/regulatory/operational/technological)
+- Measurement unit
+- Company identifier (foreign key) - for company-specific factors
+- Is global factor (boolean) - for economy-wide factors
+
+### Influence Factor Values Schema
+- Value identifier (primary key)
+- Factor identifier (foreign key)
+- Period date
+- Factor value
+- Is projected (boolean)
+- Data source reference
+
+### Correlation Model Schema
+- Model identifier (primary key)
+- Model name
+- Model type (linear/polynomial/time-series)
+- Mathematical formula description
+- Creation date
+- Validation statistics (R-squared, RMSE, MAE)
+
+### Correlation Coefficient Schema
+- Coefficient identifier (primary key)
+- Model identifier (foreign key)
+- Influence factor identifier (foreign key)
+- Target metric (Scope 1/2/3)
+- Coefficient value
+- Statistical significance (p-value)
+
+### Simulation Configuration Schema
+- Simulation identifier (primary key)
+- Company identifier (foreign key)
+- Model identifier (foreign key)
+- Projection start date
+- Projection end date
+- Confidence level (percentage)
+- Creation timestamp
+
+### Prognosis Result Schema
+- Result identifier (primary key)
+- Simulation identifier (foreign key)
+- Projection period date
+- Scope 1 projected emissions (tCO2e)
+- Scope 1 confidence interval lower bound
+- Scope 1 confidence interval upper bound
+- Scope 2 projected emissions (tCO2e)
+- Scope 2 confidence interval lower bound
+- Scope 2 confidence interval upper bound
+- Scope 3 projected emissions (tCO2e)
+- Scope 3 confidence interval lower bound
+- Scope 3 confidence interval upper bound
+- Methodology documentation reference
+- Calculation timestamp

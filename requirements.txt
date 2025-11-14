@@ -1,0 +1,19 @@
+# ESRS Environmental Topics Financial Impact Assessment
+# Feature: 001-esrs-e1-simulation
+# Python 3.11+
+
+# Core numerical computation
+numpy>=1.24,<2.0
+
+# Data manipulation
+pandas>=2.0,<3.0
+
+# Scientific computing and statistics
+scipy>=1.10,<2.0
+
+# Testing framework
+pytest>=7.4,<8.0
+pytest-cov>=4.1,<5.0
+
+# Optional: GPU acceleration (deferred to Phase 2 optimization)
+# cupy-cuda11x>=12.0  # Uncomment if GPU available and profiling shows benefit

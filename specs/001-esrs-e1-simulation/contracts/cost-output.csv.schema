@@ -1,0 +1,74 @@
+# ESRS Cost Assessment CSV Output Schema
+# Feature: 001-esrs-e1-simulation
+# Date: 2025-11-14
+
+## Output CSV Columns
+
+| Column Name | Data Type | Required | Description | Example |
+|-------------|-----------|----------|-------------|---------|
+| calculation_id | string | Yes | Unique calculation run identifier | "CALC_20251114_001" |
+| company_id | string | Yes | Company identifier from database | "ACME_CORP" |
+| company_name | string | Yes | Company legal name | "ACME Corporation" |
+| scenario_id | string | Yes | Scenario used for calculation | "IEA_NZ2050" |
+| scenario_name | string | Yes | Human-readable scenario name | "IEA Net Zero 2050" |
+| esrs_topic | string | Yes | ESRS environmental topic | "E1", "E2", "E3", "E4", or "E5" |
+| cost_category | string | Yes | Type of cost | "carbon_pricing", "transition", "physical_risk", or "compliance" |
+| calculated_cost_eur | float | Yes | Estimated cost in euros | 1250000.50 |
+| ci_lower_eur | float | Yes | Confidence interval lower bound | 1000000.00 |
+| ci_upper_eur | float | Yes | Confidence interval upper bound | 1500000.00 |
+| confidence_level_pct | integer | Yes | Confidence level used | 90, 95, or 99 |
+| top_influence_factor_1 | string | No | Most significant influence factor | "EU_ETS_Carbon_Price" |
+| top_influence_factor_1_contribution_pct | float | No | Contribution to cost | 45.2 |
+| top_influence_factor_2 | string | No | Second most significant factor | "Energy_Price_Industrial" |
+| top_influence_factor_2_contribution_pct | float | No | Contribution to cost | 28.7 |
+| top_influence_factor_3 | string | No | Third most significant factor | "Regulatory_Compliance_Stringency" |
+| top_influence_factor_3_contribution_pct | float | No | Contribution to cost | 15.1 |
+| suspicious_value_flag | boolean | Yes | True if flagged for review | TRUE or FALSE |
+| suspicious_value_reason | string | No | Reason for flag if applicable | "Negative cost detected: -50000 EUR" |
+| data_quality_warning | string | No | Warning if input data was sparse | "Scope 3 data imputed (60% missing)" |
+| calculation_timestamp | datetime | Yes | ISO 8601 timestamp | "2025-11-14T10:30:45Z" |
+| methodology_reference | string | Yes | Link to calculation methodology | "ESRS_E1_Carbon_Pricing_Method_v1.0" |
+
+## CSV Format Requirements
+
+- **Encoding**: UTF-8
+- **Delimiter**: Comma (`,`)
+- **Quote Character**: Double quote (`"`)
+- **Header Row**: Required (column names as specified above)
+- **Line Terminator**: CRLF (`\r\n`) or LF (`\n`)
+- **Decimal Separator**: Period (`.`)
+- **Boolean Values**: `TRUE` or `FALSE` (uppercase)
+- **Null Values**: Empty string (no quotes)
+- **Datetime Format**: ISO 8601 (YYYY-MM-DDTHH:MM:SSZ)
+
+## Example CSV Output
+
+```csv
+calculation_id,company_id,company_name,scenario_id,scenario_name,esrs_topic,cost_category,calculated_cost_eur,ci_lower_eur,ci_upper_eur,confidence_level_pct,top_influence_factor_1,top_influence_factor_1_contribution_pct,top_influence_factor_2,top_influence_factor_2_contribution_pct,top_influence_factor_3,top_influence_factor_3_contribution_pct,suspicious_value_flag,suspicious_value_reason,data_quality_warning,calculation_timestamp,methodology_reference
+CALC_20251114_001,ACME_CORP,ACME Corporation,IEA_NZ2050,IEA Net Zero 2050,E1,carbon_pricing,2600000.00,2340000.00,2860000.00,95,EU_ETS_Carbon_Price,65.3,Energy_Price_Industrial,22.1,Regulatory_Stringency,8.4,FALSE,,,2025-11-14T10:30:45Z,ESRS_E1_Carbon_Pricing_v1.0
+CALC_20251114_001,ACME_CORP,ACME Corporation,IEA_NZ2050,IEA Net Zero 2050,E1,transition,12500000.00,10000000.00,15000000.00,95,Technology_Cost_Decline,48.2,Energy_Efficiency_Capex,35.7,Renewable_Energy_Premium,12.5,FALSE,,,2025-11-14T10:30:45Z,ESRS_E1_Transition_Cost_v1.0
+CALC_20251114_001,ACME_CORP,ACME Corporation,IEA_NZ2050,IEA Net Zero 2050,E1,physical_risk,3200000.00,2500000.00,4100000.00,95,Physical_Climate_Impact_Level,72.1,Extreme_Weather_Frequency,18.3,Supply_Chain_Disruption,7.2,FALSE,,Scope 3 data imputed (40% missing),2025-11-14T10:30:45Z,ESRS_E1_Physical_Risk_v1.0
+CALC_20251114_001,ACME_CORP,ACME Corporation,IEA_NZ2050,IEA Net Zero 2050,E1,compliance,450000.00,380000.00,520000.00,95,Reporting_Complexity,55.0,Assurance_Requirements,30.0,Data_Collection_Burden,15.0,FALSE,,,2025-11-14T10:30:45Z,ESRS_E1_Compliance_Cost_v1.0
+```
+
+## Audit Trail CSV (Separate File)
+
+For full audit trail, a second CSV file is generated: `<calculation_id>_audit_trail.csv`
+
+| Column Name | Data Type | Description |
+|-------------|-----------|-------------|
+| calculation_id | string | Links to main results |
+| audit_entry_type | string | "data_imputation", "correlation_applied", "validation_warning", etc. |
+| esrs_topic | string | Which topic this entry relates to |
+| entry_timestamp | datetime | When this audit entry was created |
+| entry_description | string | Human-readable description |
+| entry_details_json | string | JSON with technical details |
+
+## Validation Rules
+
+1. **Each calculation_id** must have at least one result row
+2. **For each ESRS topic assessed**, there should be 1-4 cost category rows (depending on applicability)
+3. **Confidence intervals** must satisfy: ci_lower_eur ≤ calculated_cost_eur ≤ ci_upper_eur
+4. **Top influence factor contributions** should sum to ≤100% (other factors may contribute remaining percentage)
+5. **Suspicious value flags** must have a reason if TRUE
+6. **All monetary values** must be in EUR (no currency conversion)

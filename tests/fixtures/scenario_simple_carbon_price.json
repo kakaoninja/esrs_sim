@@ -1,0 +1,33 @@
+{
+  "climate_scenario": {
+    "scenario_id": "TEST_SIMPLE_CARBON_PRICE",
+    "scenario_name": "Simple Carbon Price Test Scenario",
+    "scenario_source": "custom",
+    "temperature_pathway": "2C",
+    "baseline_year": 2024,
+    "target_year": 2030,
+    "co2_price_baseline_eur_per_tco2e": 100.0,
+    "co2_price_target_eur_per_tco2e": 100.0,
+    "policy_stringency_level": "medium",
+    "physical_climate_impact_level": "medium",
+    "energy_price_multiplier": 1.0,
+    "technology_cost_reduction_pct": 0.0,
+    "scenario_documentation_reference": "Test Fixture - Simple constant carbon price for unit testing"
+  },
+  "influence_factors": [
+    {
+      "factor_id": "IF_CARBON_PRICE_SIMPLE",
+      "factor_name": "CO2 Price",
+      "factor_type": "carbon_pricing",
+      "esrs_topic": "E1",
+      "unit": "EUR/tCO2e",
+      "scenario_id": "TEST_SIMPLE_CARBON_PRICE",
+      "baseline_value": 100.0,
+      "target_value": 100.0,
+      "confidence_level": 0.95,
+      "data_source_reference": "Test Fixture"
+    }
+  ],
+  "description": "Minimal scenario for unit testing carbon pricing calculations with constant €100/tCO2e price",
+  "expected_use": "Use with company_simple.json to verify basic carbon cost calculation: 3,500 tCO2e * €100 = €350,000"
+}

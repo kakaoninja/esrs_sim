@@ -1,0 +1,166 @@
+{
+  "climate_scenario": {
+    "scenario_id": "IEA_NZ2050_TEST",
+    "scenario_name": "IEA Net Zero by 2050 Test Scenario",
+    "scenario_source": "IEA",
+    "temperature_pathway": "1.5C",
+    "baseline_year": 2024,
+    "target_year": 2030,
+    "co2_price_baseline_eur_per_tco2e": 80.0,
+    "co2_price_target_eur_per_tco2e": 130.0,
+    "policy_stringency_level": "high",
+    "physical_climate_impact_level": "low-medium",
+    "energy_price_multiplier": 1.3,
+    "technology_cost_reduction_pct": 25.0,
+    "scenario_documentation_reference": "IEA Net Zero by 2050: A Roadmap for the Global Energy Sector (2021)"
+  },
+  "influence_factors": [
+    {
+      "factor_id": "IF_CARBON_PRICE_NZ2050",
+      "factor_name": "CO2 Price (Net Zero 2050)",
+      "factor_type": "carbon_pricing",
+      "esrs_topic": "E1",
+      "unit": "EUR/tCO2e",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 80.0,
+      "target_value": 130.0,
+      "confidence_level": 0.80,
+      "data_source_reference": "IEA NZE2050 carbon price projections"
+    },
+    {
+      "factor_id": "IF_ENERGY_PRICE_NZ2050",
+      "factor_name": "Energy Price Multiplier",
+      "factor_type": "energy_pricing",
+      "esrs_topic": "E1",
+      "unit": "multiplier",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 1.0,
+      "target_value": 1.3,
+      "confidence_level": 0.75,
+      "data_source_reference": "IEA NZE2050 energy price outlook"
+    },
+    {
+      "factor_id": "IF_POLICY_STRINGENCY_NZ2050",
+      "factor_name": "Climate Policy Stringency",
+      "factor_type": "regulatory",
+      "esrs_topic": "E1",
+      "unit": "index_0_10",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 6.0,
+      "target_value": 9.0,
+      "confidence_level": 0.85,
+      "data_source_reference": "IEA NZE2050 policy assumptions"
+    },
+    {
+      "factor_id": "IF_TECH_COST_REDUCTION_NZ2050",
+      "factor_name": "Low-Carbon Technology Cost Reduction",
+      "factor_type": "technology",
+      "esrs_topic": "E1",
+      "unit": "percentage",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 0.0,
+      "target_value": 25.0,
+      "confidence_level": 0.70,
+      "data_source_reference": "IEA NZE2050 technology learning curves"
+    },
+    {
+      "factor_id": "IF_PHYSICAL_RISK_NZ2050",
+      "factor_name": "Physical Climate Risk Index",
+      "factor_type": "physical_risk",
+      "esrs_topic": "E1",
+      "unit": "index_0_10",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 3.0,
+      "target_value": 4.0,
+      "confidence_level": 0.65,
+      "data_source_reference": "IPCC AR6 1.5C pathway physical impacts"
+    },
+    {
+      "factor_id": "IF_POLLUTION_COMPLIANCE_NZ2050",
+      "factor_name": "Air Pollution Regulation Stringency",
+      "factor_type": "regulatory",
+      "esrs_topic": "E2",
+      "unit": "index_0_10",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 5.0,
+      "target_value": 8.0,
+      "confidence_level": 0.75,
+      "data_source_reference": "IEA NZE2050 air quality improvements"
+    },
+    {
+      "factor_id": "IF_WATER_SCARCITY_NZ2050",
+      "factor_name": "Water Scarcity Index",
+      "factor_type": "resource_scarcity",
+      "esrs_topic": "E3",
+      "unit": "index_0_10",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 4.0,
+      "target_value": 5.0,
+      "confidence_level": 0.60,
+      "data_source_reference": "IPCC AR6 water stress projections 1.5C"
+    },
+    {
+      "factor_id": "IF_BIODIVERSITY_REGULATION_NZ2050",
+      "factor_name": "Biodiversity Protection Stringency",
+      "factor_type": "regulatory",
+      "esrs_topic": "E4",
+      "unit": "index_0_10",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 5.0,
+      "target_value": 7.5,
+      "confidence_level": 0.70,
+      "data_source_reference": "Convention on Biological Diversity targets"
+    },
+    {
+      "factor_id": "IF_CIRCULAR_ECONOMY_NZ2050",
+      "factor_name": "Circular Economy Policy Stringency",
+      "factor_type": "regulatory",
+      "esrs_topic": "E5",
+      "unit": "index_0_10",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "baseline_value": 4.0,
+      "target_value": 7.0,
+      "confidence_level": 0.70,
+      "data_source_reference": "EU Circular Economy Action Plan targets"
+    }
+  ],
+  "correlations": [
+    {
+      "factor_1_id": "IF_CARBON_PRICE_NZ2050",
+      "factor_2_id": "IF_POLICY_STRINGENCY_NZ2050",
+      "correlation_strength": 0.85,
+      "correlation_confidence": 0.90,
+      "rationale": "Higher policy stringency directly drives carbon pricing mechanisms"
+    },
+    {
+      "factor_1_id": "IF_ENERGY_PRICE_NZ2050",
+      "factor_2_id": "IF_CARBON_PRICE_NZ2050",
+      "correlation_strength": 0.70,
+      "correlation_confidence": 0.75,
+      "rationale": "Carbon pricing increases fossil fuel costs, affecting overall energy prices"
+    },
+    {
+      "factor_1_id": "IF_TECH_COST_REDUCTION_NZ2050",
+      "factor_2_id": "IF_POLICY_STRINGENCY_NZ2050",
+      "correlation_strength": 0.65,
+      "correlation_confidence": 0.70,
+      "rationale": "Strong policy support accelerates technology deployment and learning"
+    },
+    {
+      "factor_1_id": "IF_POLLUTION_COMPLIANCE_NZ2050",
+      "factor_2_id": "IF_CARBON_PRICE_NZ2050",
+      "correlation_strength": 0.75,
+      "correlation_confidence": 0.80,
+      "rationale": "Climate policies often include co-benefits for air quality regulation"
+    },
+    {
+      "factor_1_id": "IF_CIRCULAR_ECONOMY_NZ2050",
+      "factor_2_id": "IF_POLICY_STRINGENCY_NZ2050",
+      "correlation_strength": 0.60,
+      "correlation_confidence": 0.75,
+      "rationale": "Comprehensive climate policy includes circular economy measures"
+    }
+  ],
+  "description": "Comprehensive test scenario based on IEA Net Zero by 2050 pathway with influence factors for all ESRS E1-E5 topics",
+  "expected_use": "Use with company_complex.json for integration testing of full E1-E5 cost assessment with correlations"
+}

@@ -1,0 +1,36 @@
+{
+  "company_profile": {
+    "company_id": "TEST_SIMPLE_001",
+    "company_name": "SimpleCo Test Company",
+    "industry_code": "C24.10",
+    "annual_revenue_eur": 10000000.0,
+    "reporting_year": 2024,
+    "esrs_e1_applicable": 1,
+    "esrs_e2_applicable": 0,
+    "esrs_e3_applicable": 0,
+    "esrs_e4_applicable": 0,
+    "esrs_e5_applicable": 0
+  },
+  "company_report_data": {
+    "record_id": "TEST_SIMPLE_001_2024",
+    "company_id": "TEST_SIMPLE_001",
+    "reporting_year": 2024,
+    "scope_1_emissions_tco2e": 1000.0,
+    "scope_2_location_tco2e": 500.0,
+    "scope_2_market_tco2e": 500.0,
+    "scope_3_emissions_tco2e": 2000.0,
+    "carbon_intensity_tco2e_per_eur": 0.00035,
+    "pollution_metrics": null,
+    "water_consumption_m3": null,
+    "water_discharge_m3": null,
+    "biodiversity_land_use_ha": null,
+    "biodiversity_habitat_impact_score": null,
+    "waste_generation_tonnes": null,
+    "recycling_rate_pct": null,
+    "material_recovery_pct": null,
+    "data_quality_indicator": "measured",
+    "report_source_reference": "Test Fixture - Simple Company"
+  },
+  "description": "Minimal test case for unit tests - SimpleCo with basic E1 (Climate) data only",
+  "expected_outcome": "With simple carbon price of €100/tCO2e: Scope 1 carbon cost = 1,000 tCO2e * €100 = €100,000"
+}

@@ -1,0 +1,249 @@
+{
+  "test_case": {
+    "company_fixture": "company_complex.json",
+    "scenario_fixture": "scenario_iea_nz2050.json",
+    "test_type": "integration",
+    "description": "Comprehensive E1-E5 cost assessment with IEA Net Zero 2050 scenario including influence factors and correlations"
+  },
+  "input_summary": {
+    "company_id": "TEST_COMPLEX_001",
+    "company_name": "ComplexCorp Test Enterprise",
+    "industry_code": "C24.10",
+    "reporting_year": 2024,
+    "annual_revenue_eur": 500000000.0,
+    "scope_1_emissions_tco2e": 50000.0,
+    "scope_2_market_tco2e": 30000.0,
+    "scope_3_emissions_tco2e": 120000.0,
+    "total_emissions_tco2e": 200000.0,
+    "carbon_intensity_tco2e_per_eur": 0.0004,
+    "pollution_metrics": {"NOx_tonnes": 100, "SOx_tonnes": 50, "PM10_tonnes": 25},
+    "water_consumption_m3": 1000000.0,
+    "biodiversity_land_use_ha": 50.0,
+    "waste_generation_tonnes": 5000.0,
+    "recycling_rate_pct": 30.0,
+    "scenario_id": "IEA_NZ2050_TEST",
+    "co2_price_baseline_eur_per_tco2e": 80.0,
+    "co2_price_target_eur_per_tco2e": 130.0
+  },
+  "expected_costs": {
+    "E1_Climate": {
+      "cost_categories": [
+        {
+          "category": "carbon_pricing",
+          "calculation": "200,000 tCO2e * €130/tCO2e (2030 target price)",
+          "amount_eur": 26000000.0,
+          "confidence_level": 0.80,
+          "cost_horizon_years": 6,
+          "influence_factors_applied": ["IF_CARBON_PRICE_NZ2050"],
+          "notes": "2030 carbon price projection from IEA NZ2050 scenario applied to total emissions"
+        },
+        {
+          "category": "transition_costs",
+          "calculation": "€500M revenue * 2% transition intensity * 5 year horizon",
+          "amount_eur": 50000000.0,
+          "confidence_level": 0.70,
+          "cost_horizon_years": 5,
+          "influence_factors_applied": ["IF_POLICY_STRINGENCY_NZ2050", "IF_TECH_COST_REDUCTION_NZ2050"],
+          "notes": "Estimated capex for decarbonization (energy efficiency, renewable energy, electrification) adjusted for 25% technology cost reduction"
+        },
+        {
+          "category": "physical_risk_costs",
+          "calculation": "€500M revenue * 1% physical risk factor",
+          "amount_eur": 5000000.0,
+          "confidence_level": 0.65,
+          "cost_horizon_years": 10,
+          "influence_factors_applied": ["IF_PHYSICAL_RISK_NZ2050"],
+          "notes": "Low-medium physical climate impacts under 1.5C pathway (supply chain disruption, asset damage)"
+        },
+        {
+          "category": "compliance_costs",
+          "calculation": "Annual ESRS reporting, verification, systems implementation",
+          "amount_eur": 500000.0,
+          "confidence_level": 0.90,
+          "cost_horizon_years": 1,
+          "influence_factors_applied": ["IF_POLICY_STRINGENCY_NZ2050"],
+          "notes": "Ongoing compliance costs for large enterprise with complex reporting requirements"
+        }
+      ],
+      "total_e1_cost_eur": 81500000.0,
+      "total_e1_confidence": 0.75,
+      "correlation_adjustments": {
+        "carbon_price_policy_correlation": {
+          "factors": ["IF_CARBON_PRICE_NZ2050", "IF_POLICY_STRINGENCY_NZ2050"],
+          "correlation_strength": 0.85,
+          "adjustment_pct": 0.0,
+          "notes": "High correlation already reflected in scenario design"
+        }
+      }
+    },
+    "E2_Pollution": {
+      "cost_categories": [
+        {
+          "category": "abatement_costs",
+          "calculation": "NOx/SOx/PM10 reduction technologies (mid-range estimate)",
+          "amount_eur": 3500000.0,
+          "confidence_level": 0.70,
+          "cost_horizon_years": 5,
+          "influence_factors_applied": ["IF_POLLUTION_COMPLIANCE_NZ2050"],
+          "pollutants_addressed": ["NOx: 100t", "SOx: 50t", "PM10: 25t"],
+          "notes": "Scrubbers, filters, process improvements for air quality compliance"
+        },
+        {
+          "category": "compliance_costs",
+          "calculation": "Monitoring, reporting, permitting for air emissions",
+          "amount_eur": 300000.0,
+          "confidence_level": 0.85,
+          "cost_horizon_years": 1,
+          "influence_factors_applied": ["IF_POLLUTION_COMPLIANCE_NZ2050"],
+          "notes": "Annual compliance costs for pollution monitoring and reporting"
+        }
+      ],
+      "total_e2_cost_eur": 3800000.0,
+      "total_e2_confidence": 0.72,
+      "correlation_adjustments": {
+        "pollution_carbon_correlation": {
+          "factors": ["IF_POLLUTION_COMPLIANCE_NZ2050", "IF_CARBON_PRICE_NZ2050"],
+          "correlation_strength": 0.75,
+          "adjustment_pct": 5.0,
+          "notes": "Co-benefits: carbon reduction measures also reduce air pollutants, reducing standalone abatement costs by ~5%"
+        }
+      }
+    },
+    "E3_Water": {
+      "cost_categories": [
+        {
+          "category": "water_efficiency_capex",
+          "calculation": "1M m³ consumption * €2/m³ efficiency improvement (mid-range)",
+          "amount_eur": 2000000.0,
+          "confidence_level": 0.70,
+          "cost_horizon_years": 5,
+          "influence_factors_applied": ["IF_WATER_SCARCITY_NZ2050"],
+          "notes": "Recycling systems, efficiency upgrades to reduce water consumption by 20%"
+        },
+        {
+          "category": "compliance_costs",
+          "calculation": "Water discharge monitoring, permitting, treatment upgrades",
+          "amount_eur": 200000.0,
+          "confidence_level": 0.80,
+          "cost_horizon_years": 1,
+          "influence_factors_applied": ["IF_WATER_SCARCITY_NZ2050"],
+          "notes": "Annual water management compliance costs"
+        }
+      ],
+      "total_e3_cost_eur": 2200000.0,
+      "total_e3_confidence": 0.72
+    },
+    "E4_Biodiversity": {
+      "cost_categories": [
+        {
+          "category": "habitat_restoration",
+          "calculation": "50 ha land use * €25,000/ha restoration (mid-range)",
+          "amount_eur": 1250000.0,
+          "confidence_level": 0.65,
+          "cost_horizon_years": 5,
+          "influence_factors_applied": ["IF_BIODIVERSITY_REGULATION_NZ2050"],
+          "notes": "Habitat restoration, biodiversity offsetting for 3.2 impact score mitigation"
+        },
+        {
+          "category": "compliance_costs",
+          "calculation": "Biodiversity assessments, monitoring, reporting",
+          "amount_eur": 100000.0,
+          "confidence_level": 0.80,
+          "cost_horizon_years": 1,
+          "influence_factors_applied": ["IF_BIODIVERSITY_REGULATION_NZ2050"],
+          "notes": "Annual biodiversity impact assessment and compliance"
+        }
+      ],
+      "total_e4_cost_eur": 1350000.0,
+      "total_e4_confidence": 0.68
+    },
+    "E5_Circular_Economy": {
+      "cost_categories": [
+        {
+          "category": "waste_reduction_systems",
+          "calculation": "5,000 tonnes waste * €300/tonne system improvements (mid-range)",
+          "amount_eur": 1500000.0,
+          "confidence_level": 0.70,
+          "cost_horizon_years": 5,
+          "influence_factors_applied": ["IF_CIRCULAR_ECONOMY_NZ2050"],
+          "notes": "Circular economy systems to increase recycling from 30% to 60% (target 3,000t additional recycling)"
+        },
+        {
+          "category": "compliance_costs",
+          "calculation": "Waste tracking, extended producer responsibility, reporting",
+          "amount_eur": 100000.0,
+          "confidence_level": 0.85,
+          "cost_horizon_years": 1,
+          "influence_factors_applied": ["IF_CIRCULAR_ECONOMY_NZ2050"],
+          "notes": "Annual circular economy compliance and reporting costs"
+        }
+      ],
+      "total_e5_cost_eur": 1600000.0,
+      "total_e5_confidence": 0.73,
+      "correlation_adjustments": {
+        "circular_policy_correlation": {
+          "factors": ["IF_CIRCULAR_ECONOMY_NZ2050", "IF_POLICY_STRINGENCY_NZ2050"],
+          "correlation_strength": 0.60,
+          "adjustment_pct": 0.0,
+          "notes": "Correlation reflected in regulatory stringency levels"
+        }
+      }
+    }
+  },
+  "expected_totals": {
+    "total_environmental_cost_eur": 90450000.0,
+    "cost_breakdown_by_topic": {
+      "E1_Climate": 81500000.0,
+      "E2_Pollution": 3800000.0,
+      "E3_Water": 2200000.0,
+      "E4_Biodiversity": 1350000.0,
+      "E5_Circular_Economy": 1600000.0
+    },
+    "cost_as_percentage_of_revenue": 18.09,
+    "overall_confidence_level": 0.74,
+    "assessment_timestamp": "2024-01-01T00:00:00Z",
+    "calculation_notes": "Full integration test with all ESRS E1-E5 topics, IEA NZ2050 scenario, 9 influence factors, 5 correlations applied"
+  },
+  "csv_output_validation": {
+    "expected_row_count": 1,
+    "key_fields": {
+      "company_id": "TEST_COMPLEX_001",
+      "scenario_id": "IEA_NZ2050_TEST",
+      "e1_carbon_pricing_cost_eur": 26000000.0,
+      "e1_transition_cost_eur": 50000000.0,
+      "e1_physical_risk_cost_eur": 5000000.0,
+      "e1_compliance_cost_eur": 500000.0,
+      "e1_total_cost_eur": 81500000.0,
+      "e2_total_cost_eur": 3800000.0,
+      "e3_total_cost_eur": 2200000.0,
+      "e4_total_cost_eur": 1350000.0,
+      "e5_total_cost_eur": 1600000.0,
+      "total_environmental_cost_eur": 90450000.0,
+      "overall_confidence_level": 0.74
+    }
+  },
+  "test_assertions": [
+    "Assert E1 total: 26M + 50M + 5M + 0.5M == 81.5M EUR",
+    "Assert E2 total: 3.5M + 0.3M == 3.8M EUR",
+    "Assert E3 total: 2.0M + 0.2M == 2.2M EUR",
+    "Assert E4 total: 1.25M + 0.1M == 1.35M EUR",
+    "Assert E5 total: 1.5M + 0.1M == 1.6M EUR",
+    "Assert grand total: 81.5M + 3.8M + 2.2M + 1.35M + 1.6M == 90.45M EUR",
+    "Assert cost percentage: 90.45M / 500M * 100 == 18.09%",
+    "Assert overall confidence level calculated as weighted average: ~0.74",
+    "Assert all 9 influence factors were applied to relevant cost categories",
+    "Assert 5 correlation adjustments are documented",
+    "Assert carbon intensity metric: 200,000 tCO2e / 500M EUR == 0.0004 tCO2e/EUR"
+  ],
+  "validation_tolerances": {
+    "cost_amounts": {
+      "absolute_tolerance_eur": 10000.0,
+      "relative_tolerance_pct": 0.5,
+      "notes": "Allow for rounding and minor calculation variations"
+    },
+    "confidence_levels": {
+      "absolute_tolerance": 0.02,
+      "notes": "Confidence calculations may vary slightly based on weighting methods"
+    }
+  }
+}
