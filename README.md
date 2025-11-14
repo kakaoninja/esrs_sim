@@ -38,14 +38,15 @@ Uses climate scenarios (IEA, NGFS, IPCC) with influence factors (CO2 prices, ene
 git clone <repository-url>
 cd master_climate_sim
 
-# Create virtual environment
-python -m venv venv
+# Optional venv:
+  # Create virtual environment
+  python -m venv venv
 
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
+  # Activate virtual environment
+  # Windows:
+  venv\Scripts\activate
+  # macOS/Linux:
+  source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -146,11 +147,11 @@ See [constitution](\.specify\memory\constitution.md) for development principles.
 
 ## License
 
-[Add license information]
+[MIT_License](https://github.com/kakaoninja/esrs_sim/blob/main/LICENSE)
 
 ## Contributing
 
-[Add contribution guidelines]
+[Ask me before contributing](mailto:kakaoninja@gmail.com)
 
 ## Support
 
